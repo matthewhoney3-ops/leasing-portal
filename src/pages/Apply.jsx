@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import BrandMark from '../components/Brand.jsx'
 import { supabase, isSupabaseConfigured } from '../lib/supabase.js'
+import { SCREENING_LINKS } from '../lib/screeningLinks.js'
 
 const initialForm = {
   applicant_name: '',
@@ -15,6 +16,7 @@ export default function Apply() {
   const [searchParams] = useSearchParams()
   const propertyId = searchParams.get('property') || 'unspecified'
   const propertyLabel = searchParams.get('label') || 'Golden Hive Capital rental'
+  const screeningLink = SCREENING_LINKS[propertyId]
 
   const [form, setForm] = useState(initialForm)
   const [status, setStatus] = useState('idle') // idle | submitting | success | error
@@ -43,6 +45,8 @@ export default function Apply() {
       applicant_phone: form.applicant_phone.trim() || null,
       desired_move_in: form.desired_move_in || null,
       notes: form.notes.trim() || null,
+      status: screeningLink ? 'screening_sent' : 'submitted',
+      screening_link: screeningLink || null,
     })
 
     if (error) {
@@ -73,12 +77,30 @@ export default function Apply() {
       <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center">
         <BrandMark />
         <h1 className="mt-8 text-2xl font-medium">Application received</h1>
-        <p className="mt-3 max-w-md text-neutral-400">
-          Thanks, {form.applicant_name.split(' ')[0]} — we&apos;ve received your application for{' '}
-          {propertyLabel}. Next, you&apos;ll get an email with a link to complete identity
-          verification and a credit and background check. We&apos;ll follow up once that&apos;s
-          done.
-        </p>
+        {screeningLink ? (
+          <>
+            <p className="mt-3 max-w-md text-neutral-400">
+              Thanks, {form.applicant_name.split(' ')[0]} — we&apos;ve received your application
+              for {propertyLabel}. Last step: a credit and background check through RentSpree,
+              our screening partner. You&apos;ll pay their $30&ndash;35 screening fee directly to
+              them, not to us.
+            </p>
+            
+                <a
+              href={screeningLink}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-6 rounded-md bg-gold-gradient px-5 py-2 text-sm font-medium text-neutral-900"
+            >
+              Continue to screening &amp; background check
+            </a>
+          </>
+        ) : (
+          <p className="mt-3 max-w-md text-neutral-400">
+            Thanks, {form.applicant_name.split(' ')[0]} — we&apos;ve received your application for{' '}
+            {propertyLabel}. We&apos;ll follow up shortly with next steps.
+          </p>
+        )}
       </div>
     )
   }
@@ -89,8 +111,9 @@ export default function Apply() {
       <div className="mt-10 w-full max-w-md">
         <h1 className="text-2xl font-medium">Apply for {propertyLabel}</h1>
         <p className="mt-2 text-sm text-neutral-400">
-          Fill out the form below to start your application. There&apos;s no fee to apply — a
-          separate screening fee is paid directly to our screening partner later in the process.
+          Fill out the form below to start your application. There&apos;s no fee to apply — right
+          after you submit, you&apos;ll continue to a credit and background check through our
+          screening partner, RentSpree, where their fee is paid directly to them.
         </p>
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-5">
