@@ -222,6 +222,11 @@ export default function LandlordConsole() {
                 <div className="grid grid-cols-2 gap-2 text-sm">
                   <span className="text-neutral-500">Email</span><span className="text-neutral-300">{selected.applicant_email}</span>
                   <span className="text-neutral-500">Phone</span><span className="text-neutral-300">{selected.applicant_phone || '—'}</span>
+                  <span className="text-neutral-500">DOB</span><span className="text-neutral-300">{selected.date_of_birth ? formatDate(`${selected.date_of_birth}T00:00:00`) : '—'}</span>
+                  <span className="text-neutral-500">Occupants</span><span className="text-neutral-300">{selected.num_occupants ?? '—'}</span>
+                  <span className="text-neutral-500">Employment</span><span className="text-neutral-300">{selected.employment_status?.replace(/_/g, ' ') || '—'}</span>
+                  <span className="text-neutral-500">Income</span><span className={selected.monthly_income && Number(selected.monthly_income) > 0 ? 'text-neutral-300' : 'text-neutral-500'}>{selected.monthly_income ? `$${Number(selected.monthly_income).toLocaleString()}/mo` : '—'}</span>
+                  <span className="text-neutral-500">Prior eviction</span><span className={selected.prior_eviction ? 'text-red-400 font-medium' : 'text-neutral-300'}>{selected.prior_eviction === null || selected.prior_eviction === undefined ? '—' : selected.prior_eviction ? 'Yes' : 'No'}</span>
                   <span className="text-neutral-500">Move-in</span><span className="text-neutral-300">{selected.desired_move_in ? formatDate(`${selected.desired_move_in}T00:00:00`) : '—'}</span>
                   {selected.screening_link && <>
                     <span className="text-neutral-500">Screening</span>
