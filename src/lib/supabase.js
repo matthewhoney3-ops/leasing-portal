@@ -17,7 +17,6 @@ export const supabase = isSupabaseConfigured
         persistSession: true,
         autoRefreshToken: true,
         detectSessionInUrl: true,
-        storageKey: `sb-${supabaseUrl.split('//')[1].split('.')[0]}-auth-token`,
       },
     })
   : null
