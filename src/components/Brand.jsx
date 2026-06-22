@@ -1,10 +1,13 @@
-export default function BrandMark() {
+import logoFull from '../assets/logo-full.png'
+
+export default function BrandMark({ size = 'md' }) {
+  const heights = { sm: 32, md: 48, lg: 64 }
+  const h = heights[size] ?? heights.md
   return (
-    <div className="flex items-center gap-2">
-      <span className="text-xl font-semibold bg-gold-gradient bg-clip-text text-transparent">
-        Golden Hive Capital
-      </span>
-      <span className="text-xs uppercase tracking-wide text-neutral-400">Portal</span>
-    </div>
+    <img
+      src={logoFull}
+      alt="Golden Hive Capital"
+      style={{ height: h, width: 'auto' }}
+    />
   )
 }
