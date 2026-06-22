@@ -11,4 +11,13 @@ if (!isSupabaseConfigured) {
   )
 }
 
-export const supabase = isSupabaseConfigured ? createClient(supabaseUrl, supabaseAnonKey) : null
+export const supabase = isSupabaseConfigured
+  ? createClient(supabaseUrl, supabaseAnonKey, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true,
+        storageKey: `sb-${supabaseUrl.split('//')[1].split('.')[0]}-auth-token`,
+      },
+    })
+  : null
