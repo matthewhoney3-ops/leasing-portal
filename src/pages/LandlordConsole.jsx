@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import BrandMark from '../components/Brand.jsx'
+import DatePicker from '../components/DatePicker.jsx'
 import { useSession, useIsOwner } from '../lib/SessionContext.jsx'
 import { signOut } from '../lib/auth.js'
+import { LEASE_PROPERTIES } from '../lib/leaseProperties.js'
 import { supabase } from '../lib/supabase.js'
 import { Packer } from 'docx'
 import { buildLeaseDocument } from '../lib/leaseTemplate.js'
@@ -70,19 +72,21 @@ export default function LandlordConsole() {
   }
 
   function initLeaseForm(app) {
+    const knownProperty = LEASE_PROPERTIES.find(p => p.id === app.property_id)
     setLeaseForm({
       tenantNames: app.applicant_name,
+      propertyAddress: knownProperty?.address ?? '',
       leaseStartDate: app.desired_move_in ?? '',
       leaseEndDate: '',
-      monthlyRent: '',
+      monthlyRent: knownProperty?.monthlyRent ?? '',
       rentDueDay: '1',
-      lateFeeAmount: '',
+      lateFeeAmount: '75',
       gracePeriodDays: '5',
-      securityDeposit: '',
-      petDeposit: '',
-      petPolicy: '',
-      utilitiesTenantPays: '',
-      utilitiesLandlordPays: '',
+      securityDeposit: knownProperty?.securityDeposit ?? '',
+      petDeposit: knownProperty?.petDeposit ?? '',
+      petPolicy: knownProperty?.petPolicy ?? '',
+      utilitiesTenantPays: knownProperty?.utilitiesTenantPays ?? '',
+      utilitiesLandlordPays: knownProperty?.utilitiesLandlordPays ?? '',
     })
   }
 
@@ -114,6 +118,10 @@ export default function LandlordConsole() {
 
   async function generateLease() {
     if (!selected || !leaseForm) return
+    if (!leaseForm.tenantNames?.trim() || !leaseForm.leaseStartDate || !leaseForm.leaseEndDate || !leaseForm.monthlyRent) {
+      alert('Please fill in tenant name, start date, end date, and monthly rent before generating.')
+      return
+    }
     setGeneratingLease(true)
     try {
       const fmt = iso => iso ? new Date(`${iso}T00:00:00`).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : ''
