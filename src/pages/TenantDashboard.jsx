@@ -1,28 +1,3 @@
-curl -o src/pages/TenantDashboard.jsx https://raw.githubusercontent.com/matthewhoney3-ops/leasing-portal/main/src/pages/TenantDashboard.jsx
-sed -i '' '/Continue to screening/{
-n
-n
-n
-n
-a\
-\
-            \{!\['"'"'denied'"'"','"'"'withdrawn'"'"','"'"'approved'"'"'\].includes(application.status) \&\& (\
-              <div className="mt-4 pt-4 border-t border-white\/5">\
-                \{withdrawConfirm ? (\
-                  <div>\
-                    <p className="text-sm text-neutral-400 mb-3">Are you sure you want to withdraw? This cannot be undone.<\/p>\
-                    <div className="flex gap-3">\
-                      <button onClick=\{handleWithdraw\} disabled=\{withdrawing\} className="px-4 py-1.5 rounded border border-red-700 text-red-400 text-xs hover:bg-red-900\/20 disabled:opacity-60">\{withdrawing ? '"'"'Withdrawing…'"'"' : '"'"'Yes, withdraw'"'"'\}<\/button>\
-                      <button onClick=\{() => setWithdrawConfirm(false)\} className="px-4 py-1.5 rounded border border-neutral-700 text-neutral-400 text-xs">Cancel<\/button>\
-                    <\/div>\
-                  <\/div>\
-                ) : (\
-                  <button onClick=\{handleWithdraw\} className="text-xs text-neutral-500 hover:text-neutral-300 underline underline-offset-2">Withdraw application<\/button>\
-                )\}\
-              <\/div>\
-            )\}
-}' src/pages/TenantDashboard.jsx
-cat > src/pages/TenantDashboard.jsx << 'ENDOFFILE'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import BrandMark from '../components/Brand.jsx'
@@ -31,11 +6,11 @@ import { signOut } from '../lib/auth.js'
 import { supabase } from '../lib/supabase.js'
 
 const STATUS_LABELS = {
-  submitted: { label: 'Application received', color: 'text-blue-400', next: 'We\'ll send you a screening link shortly.' },
+  submitted: { label: 'Application received', color: 'text-blue-400', next: "We'll send you a screening link shortly." },
   screening_sent: { label: 'Screening in progress', color: 'text-amber-400', next: 'Complete the credit and background check via the link we sent.' },
-  screening_complete: { label: 'Screening complete', color: 'text-amber-400', next: 'We\'re reviewing your application — we\'ll be in touch soon.' },
-  approved: { label: 'Approved!', color: 'text-green-400', next: 'Great news — we\'ve approved your application. Your lease will be sent shortly.' },
-  denied: { label: 'Application closed', color: 'text-neutral-400', next: 'Thank you for your interest. We\'ve decided not to move forward at this time.' },
+  screening_complete: { label: 'Screening complete', color: 'text-amber-400', next: "We're reviewing your application — we'll be in touch soon." },
+  approved: { label: 'Approved!', color: 'text-green-400', next: "Great news — we've approved your application. Your lease will be sent shortly." },
+  denied: { label: 'Application closed', color: 'text-neutral-400', next: "Thank you for your interest. We've decided not to move forward at this time." },
   withdrawn: { label: 'Withdrawn', color: 'text-neutral-400', next: '' },
 }
 
