@@ -265,18 +265,23 @@ export default function LandlordConsole() {
                     </div>
                     <div className={`text-xs ${STATUS_COLORS[leases[selected.id].status] ?? 'text-neutral-400'}`}>{leases[selected.id].status}</div>
                     <div>
-                      <label className="block text-xs text-neutral-500 mb-1">SignWell signing link (paste after uploading)</label>
-                      <div className="flex gap-2">
-                        <input type="url" defaultValue={leases[selected.id].signwell_link ?? ''} placeholder="https://signwell.com/..."
-                          onBlur={e => updateLeaseStatus(leases[selected.id].id, leases[selected.id].status, e.target.value)}
-                          className="flex-1 rounded border border-neutral-700 bg-neutral-800 px-2 py-1 text-xs focus:border-gold-mid focus:outline-none" />
-                        {leases[selected.id].status !== 'signed' && (
+                      {leases[selected.id].status === 'signed' ? (
+                        <span className="text-green-400 text-sm font-medium">Lease signed ✓</span>
+                      ) : (
+                        <div className="space-y-3">
+                          <div className="bg-neutral-800 rounded-md p-3 text-xs text-neutral-400 space-y-2">
+                            <div className="text-neutral-300 font-medium text-xs uppercase tracking-wide mb-1">Signing steps</div>
+                            <div className="flex gap-2"><span className="text-gold-mid flex-shrink-0">1.</span><span>Download the lease and upload it to <a href="https://signwell.com" target="_blank" rel="noreferrer" className="text-gold-mid underline underline-offset-2">signwell.com</a></span></div>
+                            <div className="flex gap-2"><span className="text-gold-mid flex-shrink-0">2.</span><span>Add <strong className="text-neutral-300">{leases[selected.id].tenant_email}</strong> as the only signer — do not add yourself</span></div>
+                            <div className="flex gap-2"><span className="text-gold-mid flex-shrink-0">3.</span><span>Click <strong className="text-neutral-300">Send</strong> in SignWell — the tenant gets a signing email directly</span></div>
+                            <div className="flex gap-2"><span className="text-gold-mid flex-shrink-0">4.</span><span>Once SignWell confirms they signed, click <strong className="text-neutral-300">Mark as signed</strong> below</span></div>
+                          </div>
                           <button onClick={() => updateLeaseStatus(leases[selected.id].id, 'signed', undefined)}
-                            className="px-3 py-1 rounded border border-green-700 text-green-400 text-xs hover:bg-green-900/20">
-                            Mark signed
+                            className="w-full py-2 rounded border border-green-700 text-green-400 text-xs hover:bg-green-900/20 font-medium">
+                            Mark lease as signed
                           </button>
-                        )}
-                      </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 ) : (

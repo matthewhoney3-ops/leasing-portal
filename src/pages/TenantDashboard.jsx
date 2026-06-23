@@ -134,13 +134,18 @@ export default function TenantDashboard() {
                 {new Date(lease.lease_end).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
               </div>
               <div className="text-sm text-neutral-400 mt-1">${Number(lease.monthly_rent).toLocaleString()}/month</div>
-              {lease.signwell_link && lease.status !== 'signed' && (
-                <a href={lease.signwell_link} target="_blank" rel="noreferrer"
-                  className="mt-4 inline-block rounded-md bg-gold-gradient px-4 py-2 text-sm font-medium text-neutral-900">
-                  Review and sign lease
-                </a>
+              {lease.status === 'signed' ? (
+                <div className="flex items-center gap-2 mt-3">
+                  <span className="text-green-400 font-medium text-sm">Lease signed ✓</span>
+                  <span className="text-xs text-neutral-500">Thank you — we’ll be in touch with move-in details.</span>
+                </div>
+              ) : (
+                <div className="bg-neutral-800 rounded-md p-3 mt-3">
+                  <div className="text-amber-400 font-medium text-xs uppercase tracking-wide mb-1">Action required</div>
+                  <p className="text-sm text-neutral-300 mb-2">Your lease is ready. Check your email for a signing request from SignWell and complete your signature there.</p>
+                  <p className="text-xs text-neutral-500">Didn’t receive it? Check your spam folder or contact us at <a href="mailto:goldenhivecapital@gmail.com" className="text-gold-mid underline underline-offset-2">goldenhivecapital@gmail.com</a></p>
+                </div>
               )}
-              {lease.status === 'signed' && <p className="mt-3 text-sm text-green-400">Lease signed ✓</p>}
             </div>
           )}
 
