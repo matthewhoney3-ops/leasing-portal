@@ -92,6 +92,13 @@ export default function LandlordConsole() {
     if (!error && data) {
       setApplications(prev => prev.map(a => a.id === app.id ? data : a))
       if (selected?.id === app.id) setSelected(data)
+      if (["approved", "denied"].includes(newStatus)) {
+        fetch("/.netlify/functions/notify-status-change", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ applicant_name: app.applicant_name, applicant_email: app.applicant_email, property_label: app.property_label, new_status: newStatus }),
+        }).catch(err => console.error("Notification error:", err))
+      }
     }
     setSaving(false)
   }
